@@ -1,2 +1,2 @@
 - [x] Startseite smoother/Animationen
-- [ ] Speisekarte, Impressum, Datenschutz als eigene Seiten
+- [x] Speisekarte, Impressum, Datenschutz als eigene Seiten

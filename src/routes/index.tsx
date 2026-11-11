@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { SiteHeader, SiteFooter } from "@/components/site/Site";
 
 const IMG = "https://romediwirt.at/images";
 const G = `${IMG}/phocagallery/thumbs/phoca_thumb_l_`;
@@ -21,14 +23,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const nav = [
-  ["Über uns", "#willkommen"],
-  ["Küche", "#kueche"],
-  ["Architektur", "#architektur"],
-  ["Feiern", "#feiern"],
-  ["Kontakt", "#kontakt"],
-];
-
 const architektur = [
   "romedi_aussen_1.jpg", "romedi_aussen_2_1920.jpg", "romedi_aussen_3_1920.jpg",
   "romedi_innen_1_small_3.jpg", "romedi_innen_6.jpg", "romedi_innen_7.jpg",
@@ -37,8 +31,6 @@ const aussen = ["romedi-aussen_0040_d.jpg", "romedi-aussen_0046_d.jpg", "romedi-
 const feiern = ["romediwirt_thaur_tirol_romedi_feier_1b.jpg", "romediwirt_thaur_tirol_romedi_feier_2b.jpg", "romediwirt_thaur_tirol_romedi_feier_3b.jpg"];
 
 function Index() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
   const [y, setY] = useState(0);
   const [progress, setProgress] = useState(0);
   useEffect(() => {
@@ -51,7 +43,6 @@ function Index() {
   }, []);
   useEffect(() => {
     const f = () => {
-      setScrolled(window.scrollY > 60);
       setY(window.scrollY);
       const h = document.documentElement.scrollHeight - window.innerHeight;
       setProgress(h > 0 ? window.scrollY / h : 0);
@@ -64,27 +55,7 @@ function Index() {
   return (
     <div className="bg-background text-foreground">
       <div className="fixed top-0 left-0 z-[60] h-0.5 bg-accent" style={{ width: `${progress * 100}%` }} />
-      {/* Header */}
-      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-background/95 py-3 shadow-sm backdrop-blur" : "py-6"}`}>
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
-          <a href="#" className={`font-serif text-3xl tracking-wide ${scrolled ? "text-primary" : "text-primary-foreground"}`}>Romediwirt</a>
-          <nav className="hidden items-center gap-8 md:flex">
-            {nav.map(([l, h]) => (
-              <a key={h} href={h} className={`text-sm tracking-wider uppercase transition-colors hover:text-accent ${scrolled ? "text-foreground" : "text-primary-foreground"}`}>{l}</a>
-            ))}
-            <a href="https://romediwirt.at/index.php/speisekarte" target="_blank" rel="noreferrer" className="rounded-sm bg-accent px-5 py-2.5 text-sm tracking-wider text-accent-foreground uppercase transition hover:opacity-90">Speisekarte</a>
-          </nav>
-          <button aria-label="Menü" onClick={() => setOpen(!open)} className={`md:hidden ${scrolled ? "text-foreground" : "text-primary-foreground"}`}>
-            <span className="block h-0.5 w-7 bg-current" /><span className="mt-1.5 block h-0.5 w-7 bg-current" /><span className="mt-1.5 block h-0.5 w-5 bg-current" />
-          </button>
-        </div>
-        {open && (
-          <div className="mt-3 flex flex-col gap-4 bg-background px-6 py-6 md:hidden">
-            {nav.map(([l, h]) => <a key={h} href={h} onClick={() => setOpen(false)} className="uppercase tracking-wider">{l}</a>)}
-            <a href="https://romediwirt.at/index.php/speisekarte" className="text-accent uppercase tracking-wider">Speisekarte</a>
-          </div>
-        )}
-      </header>
+      <SiteHeader overHero />
 
       {/* Hero */}
       <section className="relative flex min-h-screen items-end overflow-hidden">
@@ -102,7 +73,7 @@ function Index() {
           </p>
           <div className="animate-rise mt-10 flex flex-wrap gap-4" style={{ animationDelay: ".45s" }}>
             <a href="tel:+436766737357" className="rounded-sm bg-accent px-8 py-4 text-sm tracking-widest text-accent-foreground uppercase transition hover:opacity-90">Tisch reservieren</a>
-            <a href="https://romediwirt.at/index.php/speisekarte" className="rounded-sm border border-primary-foreground/60 px-8 py-4 text-sm tracking-widest uppercase transition hover:bg-primary-foreground hover:text-primary">Speisekarte</a>
+            <Link to="/speisekarte" className="rounded-sm border border-primary-foreground/60 px-8 py-4 text-sm tracking-widest uppercase transition hover:bg-primary-foreground hover:text-primary">Speisekarte</Link>
           </div>
         </div>
         <a href="#willkommen" aria-label="Weiter" className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs tracking-[0.3em] text-primary-foreground uppercase md:flex">
@@ -179,7 +150,7 @@ function Index() {
             <p className="reveal mt-8 text-lg leading-relaxed text-muted-foreground">
               Machen Sie eine Auszeit vom Alltag und teilen Sie mit uns den Spaß am Essen &amp; Trinken. Frei nach dem Motto: <em className="font-serif text-2xl text-foreground">Das Leben ist schön!</em>
             </p>
-            <a href="https://romediwirt.at/index.php/speisekarte" className="mt-10 inline-block rounded-sm bg-primary px-8 py-4 text-sm tracking-widest text-primary-foreground uppercase transition hover:bg-accent">Zur Speisekarte →</a>
+            <Link to="/speisekarte" className="mt-10 inline-block rounded-sm bg-primary px-8 py-4 text-sm tracking-widest text-primary-foreground uppercase transition hover:bg-accent">Zur Speisekarte →</Link>
           </div>
         </div>
       </section>
@@ -249,40 +220,7 @@ function Index() {
         <iframe title="Karte Romediwirt" className="h-80 w-full rounded-sm border border-border grayscale" loading="lazy" src="https://www.google.com/maps?q=Romediwirt+Thaur&output=embed" />
       </section>
 
-      {/* Footer */}
-      <footer id="kontakt" className="bg-dark text-primary-foreground">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <p className="font-serif text-4xl">Romediwirt</p>
-            <p className="mt-4 max-w-sm opacity-70">Ihr Genusswirt in Thaur in Tirol – direkt neben dem Romedikirchl.</p>
-          </div>
-          <div>
-            <p className="reveal eyebrow">Kontakt</p>
-            <div className="mt-4 space-y-2 opacity-90">
-              <p>Schlossgasse 17<br />A-6065 Thaur</p>
-              <a href="tel:+436766737357" className="block hover:text-accent">+43 676 67 37 357</a>
-              <a href="mailto:info@romediwirt.at" className="block hover:text-accent">info@romediwirt.at</a>
-            </div>
-          </div>
-          <div>
-            <p className="reveal eyebrow">Öffnungszeiten</p>
-            <div className="mt-4 space-y-2 opacity-90">
-              <p>Mittwoch – Sonntag<br />10:00 – 22:00 Uhr</p>
-              <p className="opacity-70">Montag &amp; Dienstag Ruhetag</p>
-            </div>
-          </div>
-        </div>
-        <div className="reveal border-t border-primary-foreground/10">
-          <div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-4 px-6 py-6 text-sm opacity-60">
-            <p>© Romediwirt 2026</p>
-            <div className="flex gap-6">
-              <a href="https://romediwirt.at/index.php/impressum">Impressum</a>
-              <a href="https://romediwirt.at/index.php/datenschutz">Datenschutz</a>
-              <a href="https://www.facebook.com/profile.php?id=61562497402363">Facebook</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

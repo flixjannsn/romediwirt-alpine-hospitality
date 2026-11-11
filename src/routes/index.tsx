@@ -75,7 +75,7 @@ function Index() {
         <img src={HERO} alt="Panoramablick vom Romediwirt über das Inntal" className="absolute inset-0 h-full w-full object-cover" />
         <div className="hero-overlay absolute inset-0" />
         <div className="relative mx-auto w-full max-w-7xl px-6 pb-24 text-primary-foreground">
-          <p className="eyebrow animate-rise">Thaur · Tirol · seit Generationen</p>
+          <p className="eyebrow animate-rise">Thaur · Tirol · Inntal</p>
           <h1 className="animate-rise mt-6 max-w-4xl text-6xl leading-[0.95] md:text-8xl" style={{ animationDelay: ".15s" }}>
             Ihr Genusswirt <em className="text-accent">am Romedikirchl</em>
           </h1>

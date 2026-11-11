@@ -39,8 +39,23 @@ const feiern = ["romediwirt_thaur_tirol_romedi_feier_1b.jpg", "romediwirt_thaur_
 function Index() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [y, setY] = useState(0);
+  const [progress, setProgress] = useState(0);
   useEffect(() => {
-    const f = () => setScrolled(window.scrollY > 60);
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => e.isIntersecting && (e.target.classList.add("is-visible"), io.unobserve(e.target))),
+      { threshold: 0.15 },
+    );
+    document.querySelectorAll(".reveal, .reveal-img").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    const f = () => {
+      setScrolled(window.scrollY > 60);
+      setY(window.scrollY);
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(h > 0 ? window.scrollY / h : 0);
+    };
     f();
     window.addEventListener("scroll", f);
     return () => window.removeEventListener("scroll", f);
@@ -48,6 +63,7 @@ function Index() {
 
   return (
     <div className="bg-background text-foreground">
+      <div className="fixed top-0 left-0 z-[60] h-0.5 bg-accent" style={{ width: `${progress * 100}%` }} />
       {/* Header */}
       <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? "bg-background/95 py-3 shadow-sm backdrop-blur" : "py-6"}`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
@@ -72,9 +88,11 @@ function Index() {
 
       {/* Hero */}
       <section className="relative flex min-h-screen items-end overflow-hidden">
-        <img src={HERO} alt="Panoramablick vom Romediwirt über das Inntal" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0" style={{ transform: `translateY(${y * 0.35}px)` }}>
+          <img src={HERO} alt="Panoramablick vom Romediwirt über das Inntal" className="animate-kenburns h-full w-full object-cover" />
+        </div>
         <div className="hero-overlay absolute inset-0" />
-        <div className="relative mx-auto w-full max-w-7xl px-6 pb-24 text-primary-foreground">
+        <div className="relative mx-auto w-full max-w-7xl px-6 pb-24 text-primary-foreground" style={{ transform: `translateY(${y * -0.15}px)`, opacity: Math.max(0, 1 - y / 700) }}>
           <p className="eyebrow animate-rise">Thaur · Tirol · Inntal</p>
           <h1 className="animate-rise mt-6 max-w-4xl text-6xl leading-[0.95] md:text-8xl" style={{ animationDelay: ".15s" }}>
             Ihr Genusswirt <em className="text-accent">am Romedikirchl</em>
@@ -89,6 +107,9 @@ function Index() {
         </div>
       </section>
 
+        <a href="#willkommen" aria-label="Weiter" className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-xs tracking-[0.3em] text-primary-foreground uppercase md:flex">
+          Entdecken<span className="animate-scrollhint block h-10 w-px bg-primary-foreground" />
+        </a>
       {/* Info bar */}
       <div className="bg-primary text-primary-foreground">
         <div className="mx-auto grid max-w-7xl gap-6 px-6 py-8 text-center md:grid-cols-3 md:text-left">
